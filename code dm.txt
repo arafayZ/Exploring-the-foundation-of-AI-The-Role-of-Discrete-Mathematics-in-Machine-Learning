@@ -1,0 +1,65 @@
+using System;
+using System.Collections.Generic;
+
+class DecisionTreePlayTennis
+{
+    static void Main()
+    {
+        Console.WriteLine("=== Tennis Play Decision Predictor ===\n");
+
+        Console.Write("Enter Outlook (Sunny, Overcast, Rain): ");
+        string outlook = Console.ReadLine().Trim();
+
+        Console.Write("Enter Temperature (Hot, Mild, Cool): ");
+        string temperature = Console.ReadLine().Trim();
+
+        Console.Write("Enter Humidity (High, Normal): ");
+        string humidity = Console.ReadLine().Trim();
+
+        Console.Write("Is it Windy? (true/false): ");
+        bool windy;
+
+        while (!bool.TryParse(Console.ReadLine().Trim(), out windy))
+        {
+            Console.Write("Invalid input. Please enter 'true' or 'false' for Windy: ");
+        }
+
+        string decision = PredictPlayTennis(outlook, temperature, humidity, windy);
+
+        Console.WriteLine($"\n=> Decision: {decision}");
+    }
+
+    static string PredictPlayTennis(string outlook, string temperature, string humidity, bool windy)
+    {
+        var data = new List<(string Outlook, string Temp, string Humidity, bool Wind, string Play)>
+        {
+            ("Sunny", "Hot", "High", false, "No"),
+            ("Sunny", "Hot", "High", true, "No"),
+            ("Overcast", "Hot", "High", false, "Yes"),
+            ("Rainy", "Mild", "High", false, "Yes"),
+            ("Rainy", "Cool", "Normal", false, "Yes"),
+            ("Rainy", "Cool", "Normal", true, "No"),
+            ("Overcast", "Cool", "Normal", true, "Yes"),
+            ("Sunny", "Mild", "High", false, "No"),
+            ("Sunny", "Cool", "Normal", false, "Yes"),
+            ("Rainy", "Mild", "Normal", false, "Yes"),
+            ("Sunny", "Mild", "Normal", true, "Yes"),
+            ("Overcast", "Mild", "High", true, "Yes"),
+            ("Overcast", "Hot", "Normal", false, "Yes"),
+            ("Rainy", "Mild", "High", true, "No")
+        };
+
+        foreach (var record in data)
+        {
+            if (record.Outlook.Equals(outlook, StringComparison.OrdinalIgnoreCase) &&
+                record.Temp.Equals(temperature, StringComparison.OrdinalIgnoreCase) &&
+                record.Humidity.Equals(humidity, StringComparison.OrdinalIgnoreCase) &&
+                record.Wind == windy)
+            {
+                return record.Play == "Yes" ? "Play Tennis" : "Don't Play Tennis";
+            }
+        }
+
+        return "Invalid combination or data not found in the table.";
+    }
+}
